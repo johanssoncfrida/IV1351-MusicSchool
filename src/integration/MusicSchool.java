@@ -180,7 +180,7 @@ public class MusicSchool {
     private void connectToBankMS() throws ClassNotFoundException, SQLException, FailedToConnectException {
         try {
             Class.forName("org.postgresql.Driver");        
-            connection = DriverManager.getConnection(url,user, password);
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/musicschool","postgres", "postgres");
             connection.setAutoCommit(false);
         } catch (ClassNotFoundException | SQLException ex) {
             handleException("Failed to connect with database",ex);
