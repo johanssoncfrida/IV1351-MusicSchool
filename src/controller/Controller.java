@@ -42,14 +42,18 @@ public class Controller {
         boolean showStudentMenu = false;
         for(Student stu: students){
             if(stu.getStudentID().equals(stuId)){
-                System.out.println("***************************************************\n" + 
-                "Welcome " + stu.getName() + 
-                "\nYour profile\n" + stu.toString() + "\n***************************************************");
+                showWelcomeText(stu);
                 showStudentMenu = true;
             }
                 
         }
         return showStudentMenu;    
+    }
+    
+    private void showWelcomeText(Student stu){
+        System.out.println("***************************************************\n" + 
+        "Welcome " + stu.getName() + 
+        "\nYour profile\n" + stu.toString() + "\n***************************************************");
     }
     public void listStudentsInstrument(String studentId){
         for(Student stu : students)

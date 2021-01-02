@@ -16,8 +16,6 @@ import java.util.Scanner;
  * @author Me
  */
 public class Interpreter {
-    private static final String PROMPT = "> ";
-    private final Scanner console = new Scanner(System.in);
     private final Controller ctrl;
     private boolean keepReceivingCmds = false;
     
@@ -193,8 +191,5 @@ public class Interpreter {
         System.out.println("3. Select your student");
         System.out.println("4. Quit");
 }
-    private String readNextLine() {
-        System.out.print(PROMPT);
-        return console.nextLine();
-    }
+    
 }

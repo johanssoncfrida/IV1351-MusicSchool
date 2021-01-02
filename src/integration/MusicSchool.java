@@ -22,9 +22,6 @@ import model.Student;
  */
 public class MusicSchool {
     private Connection connection;
-    private final String url = "jdbc:postgresql://localhost:5432/musicschool";
-    private final String user = "postgres";
-    private final String password = "postgres";
     
     private PreparedStatement createInstrumentsStmt;
     private PreparedStatement createStudentStmt;
