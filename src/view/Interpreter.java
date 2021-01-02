@@ -47,24 +47,16 @@ public class Interpreter {
     public void handleCmds() {
         keepReceivingCmds = true;
         while (keepReceivingCmds) {
-            System.out.println("HELP: Get information about menu");
-            System.out.println("LIST_STUDENTS: Go to students menu");
-            System.out.println("QUIT: Quit Program");
+            System.out.println("Go to students menu: 1");
+            System.out.println("Quit: 2");
             try {
-                CommandLine cmdLine = new CommandLine(readNextLine());
-                switch (cmdLine.getCmd()) {
-                    case HELP:
-                        for (Command command : Command.values()) {
-                            if (command == Command.ILLEGAL_COMMAND) {
-                                continue;
-                            }
-                            System.out.println(command.toString().toLowerCase());
-                        }
-                        break;
-                    case LIST_STUDENTS:
+                Scanner scan = new Scanner(System.in);
+                int choice = scan.nextInt();
+                switch (choice) {
+                    case 1:
                         handleStudents();
                         break;
-                    case QUIT:
+                    case 2:
                         ctrl.closeConnection();
                         keepReceivingCmds = false;
                         break;
