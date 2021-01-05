@@ -1,14 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package model;
 
 
 /**
- *
- * @author Me
+ * Represents a student who attends to Soundgood musicschool.
+ * It is the superclass of the class <code>Person</code>.
+ * @author Frida Johansson
  */
 public class Student extends Person{
     String studentID;
@@ -24,13 +21,34 @@ public class Student extends Person{
     public Student(){
         
     }
+    /**
+     * 
+     * @return studentID 
+     */
     public String getStudentID(){
         return studentID;
     }
+    /**
+     * 
+     * @return the students name from subclass <code>Person</code>
+     */
     public String getName(){
         return super.getFirstName();
     }
-
+    
+    /**
+     * 
+     * @return the student's instrument.
+     */
+    public Instrument[] getInstruments(){
+        return instrument;
+    }
+    
+    /**
+     * When renting a instrument you use this method to add it to the student's 
+     * pool of instruments. 
+     * @param instr represents the instruments to be added to the student's pool
+     */
     public void pushInstrument(Instrument instr){
         for(int i = 0; i < instrument.length; i++){
                 if(instrument[i] == null){
@@ -39,6 +57,10 @@ public class Student extends Person{
                 }          
         }
     }
+    /**
+     * When terminate a instrument this method is used to pop that instrument.
+     * @param instrId represent the ID of the instrument to be popped.
+     */
     public void popInstrument(int instrId){
         Instrument [] newInstru = new Instrument[2];
         int counter = 0;
@@ -49,6 +71,11 @@ public class Student extends Person{
         }
         instrument = newInstru;
     }
+    /**
+     * Checks if the student already has the maximum rented quota of instrument
+     * or if it is possible to rent another one.
+     * @return true if possible otherwise false
+     */
     public boolean isRentPossible(){
         for (Instrument instr : instrument) {
             if (instr == null) 
@@ -56,9 +83,11 @@ public class Student extends Person{
         }
     return false;
     }
-    public Instrument[] getInstruments(){
-        return instrument;
-    }
+    
+    /**
+     * 
+     * @return the student's instrument as a readable string.
+     */
     public String getInstrumentsToString(){
         StringBuilder sb = new StringBuilder();
         for(Instrument inst: instrument)
@@ -66,6 +95,7 @@ public class Student extends Person{
                 sb.append(inst);
         return sb.toString();
     }
+   
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();

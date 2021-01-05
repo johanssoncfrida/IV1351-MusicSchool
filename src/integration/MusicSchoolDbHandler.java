@@ -1,9 +1,4 @@
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package integration;
 
 import java.sql.Connection;
@@ -11,16 +6,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-
-
 import model.Instrument;
 import model.Student;
 /**
- *
- * @author Me
+ * The handler of the database of SoundGood Musicschool
+ * @author Frida Johansson
  */
-public class MusicSchool {
+public class MusicSchoolDbHandler {
     private Connection connection;
     
     private PreparedStatement createInstrumentsStmt;
@@ -31,7 +23,7 @@ public class MusicSchool {
     private PreparedStatement createAddInstrumentToStudentStmt;
     private PreparedStatement createTerminateRentalStmt;
     
-    public MusicSchool() throws FailedToConnectException {
+    public MusicSchoolDbHandler() throws FailedToConnectException {
         try {
             connectToBankMS();
             prepareStatements();
@@ -39,7 +31,13 @@ public class MusicSchool {
             throw new FailedToConnectException("Could not connect to datasource.", exception);
         }
     }
-    public Instrument[] showInstruments() throws SQLException, FailedToConnectException{
+    
+    /**
+     * Collects the instruments from the database by the prepared
+     * @return
+     * @throws FailedToConnectException 
+     */
+    public Instrument[] showInstruments() throws FailedToConnectException{
         Instrument [] instruments = new Instrument[8];
         int counter = 0;
         try(ResultSet rs = createInstrumentsStmt.executeQuery()){
@@ -56,10 +54,16 @@ public class MusicSchool {
             }
             connection.commit();
         }catch(SQLException ex){
-            handleException("Failed to connect with database",ex);
+            handleException("Failed to list the instruments from database",ex);
         }
         return instruments;
     }
+    
+    /**
+     * Method to resize an array
+     * @param instruments the array to be resized
+     * @return a new resized array of instruments
+     */
     private Instrument[] resizeArray(Instrument [] instruments){
         Instrument [] doubleInstrument = new Instrument [instruments.length*2];
         int pos = 0;
@@ -69,6 +73,13 @@ public class MusicSchool {
         }
         return doubleInstrument;
     }
+    
+    /**
+     * Collects the students from the database
+     * @return an array of students
+     * @throws SQLException if preparedStatement fails on the connection
+     * @throws FailedToConnectException if connection fails
+     */
     public Student[] collectStudent() throws SQLException, FailedToConnectException{
         Student [] students = new Student[14];
 
@@ -90,28 +101,11 @@ public class MusicSchool {
             }
             connection.commit();
         }catch(SQLException ex){
-            handleException("Failed to connect with database",ex);    
+            handleException("Failed to collect the students",ex);    
         }return students;
     }
-
-    public void rentInstrument(Student student,int instr, String studentID) throws SQLException, FailedToConnectException{
-        try{
-            int id = collectPersonId(studentID);
-            createRentInstrStmt.setInt(1, id);
-            createRentInstrStmt.setInt(2, instr);
-            
-            int updatedRows = createRentInstrStmt.executeUpdate();
-            if (updatedRows != 1) {
-                handleException("No rows was updated!", null);
-            }
-            connection.commit();
-         }catch(SQLException ex){
-            handleException("Failed to connect with database",ex);  
-        }
-
-    }
-    public void addStudentsInstrument(Student student, String stuID) throws SQLException, FailedToConnectException{
-        
+    
+    private void addStudentsInstrument(Student student, String stuID) throws SQLException, FailedToConnectException{   
         createAddInstrumentToStudentStmt.setString(1, stuID);
         try(ResultSet rs = createAddInstrumentToStudentStmt.executeQuery()){
             while(rs.next()){
@@ -127,7 +121,53 @@ public class MusicSchool {
             handleException("Failed to connect with database",ex);
         }
     }
-    public void storeInstrument(Student student,int instrID) throws FailedToConnectException, SQLException{
+        
+    /**
+     * Rents an instrument and handles the database updates
+     * @param instr represents the instrument id
+     * @param studentID represents the student identification
+     * @throws SQLException if preparedStatement fails on the connection
+     * @throws FailedToConnectException if connection fails
+     */
+    public void rentInstrument(int instr, String studentID) throws SQLException, FailedToConnectException{
+        try{
+            int id = collectPersonId(studentID);
+            createRentInstrStmt.setInt(1, id);
+            createRentInstrStmt.setInt(2, instr);
+            int updatedRows = createRentInstrStmt.executeUpdate();
+            if (updatedRows != 1) {
+                handleException("No rows was updated!", null);
+            }
+            connection.commit();
+         }catch(SQLException ex){
+            handleException("Failed to connect with database",ex);  
+        }
+    }
+    
+    private int collectPersonId(String studentID) throws FailedToConnectException{
+        int id = 0;
+        try {
+            createcollectIdStmt.setString(1, studentID);
+            ResultSet rs = createcollectIdStmt.executeQuery();
+            while(rs.next()){
+                id = rs.getInt("person_id");
+            }
+            connection.commit();
+        }catch(SQLException ex){
+            handleException("Failed to connect with database",ex);  
+        }
+        return id;
+    }
+    
+    /**
+     * After renting an instrument you store the instrument in the students
+     * array of instruments. 
+     * @param student representing the student who's renting the instrument
+     * @param instrID representing the instrument id
+     * @throws SQLException if preparedStatement fails on the connection
+     * @throws FailedToConnectException if connection fails
+     */
+    public void storeInstrument(Student student,int instrID) throws SQLException, FailedToConnectException{
        
         createCollectInstrStmt.setInt(1, instrID);
         try(ResultSet rs = createCollectInstrStmt.executeQuery()){
@@ -143,27 +183,20 @@ public class MusicSchool {
         }catch(SQLException ex){
             handleException("Failed to connect with database",ex);
         }
-      
     }
-    private int collectPersonId(String studentID) throws FailedToConnectException{
-        int id = 0;
-        try {
-            createcollectIdStmt.setString(1, studentID);
-            ResultSet rs = createcollectIdStmt.executeQuery();
-            while(rs.next()){
-                id = rs.getInt("person_id");
-            }
-            connection.commit();
-        }catch(SQLException ex){
-            handleException("Failed to connect with database",ex);  
-        }
-        return id;
-    }
-    public void terminateRental(Student student,int instr, String studentID) throws FailedToConnectException{
+    
+    /**
+     * Terminates a rental on a student
+     * @param student representing the student who's terminating the rental
+     * @param instr representing the instrument id
+     * @param studentID representing the student identification
+     * @throws SQLException if preparedStatement fails on the connection
+     * @throws FailedToConnectException if connection fails 
+     */
+    public void terminateRental(Student student,int instr, String studentID) throws SQLException, FailedToConnectException{
         student.popInstrument(instr);
         try{
             createTerminateRentalStmt.setInt(1, instr);
-            
             int updatedRows = createTerminateRentalStmt.executeUpdate();
             if (updatedRows != 1) {
                 handleException("No rows was updated!", null);
@@ -174,6 +207,13 @@ public class MusicSchool {
             handleException("Failed to connect with database",ex);  
         }
     }
+    
+    /**
+     * Starts the connection of the database
+     * @throws ClassNotFoundException if Driver could not be loaded
+     * @throws SQLException if preparedStatement fails on the connection
+     * @throws FailedToConnectException if connection fails 
+     */
     private void connectToBankMS() throws ClassNotFoundException, SQLException, FailedToConnectException {
         try {
             Class.forName("org.postgresql.Driver");        
@@ -185,11 +225,15 @@ public class MusicSchool {
        
     }
     
+    /**
+     * Prepare statements for the querys
+     * @throws SQLException if preparedStatement fails on the connection
+     */
     private void prepareStatements() throws SQLException {
        
         createInstrumentsStmt = connection.prepareStatement("SELECT id_instrument_rental,type_of_instrument, brands, price FROM instrument_rental WHERE rented = false");
-        createStudentStmt = connection.prepareStatement("SELECT stu.student_id, stu.level, per.first_name, per.last_name, per.personal_number, per.phone_no " +
-                "FROM student stu INNER JOIN person per ON stu.person_id = per.id ");
+        createStudentStmt = connection.prepareStatement("SELECT stu.student_id, stu.level, per.first_name, per.last_name, per.personal_number, con.phone_no " +
+                "FROM student AS stu INNER JOIN person AS per ON stu.person_id = per.id INNER JOIN contact_details AS con ON con.person_id = per.id");
         createTerminateRentalStmt = connection.prepareStatement("UPDATE instrument_rental SET rented = false, person_id = null WHERE id_instrument_rental = ?");
         createRentInstrStmt = connection.prepareStatement("UPDATE instrument_rental SET rented = true, person_id = ? WHERE id_instrument_rental = ?");
         createcollectIdStmt = connection.prepareStatement("SELECT person_id FROM student WHERE student_id = ?");
@@ -198,6 +242,10 @@ public class MusicSchool {
                     "WHERE instrument_rental.person_id IN (SELECT person_id from student where student_id = ?)");
     }
     
+    /**
+     * Closes the connection for the database
+     * @throws SQLException if preparedStatement fails on the connection
+     */
     public void closeConnection() throws SQLException{
         try {
             connection.close();
@@ -205,6 +253,13 @@ public class MusicSchool {
             throw new SQLException(" Could not close result set.", e);
         }
     }
+    
+    /**
+     * Exceptionshandler that handles exception and rollback
+     * @param failureMsg represents the error message
+     * @param cause represents the cause of the error
+     * @throws FailedToConnectException if connection fails 
+     */
     private void handleException(String failureMsg, Exception cause) throws FailedToConnectException {
         String fullExceptionMsg = failureMsg;
         try {
@@ -213,7 +268,6 @@ public class MusicSchool {
             fullExceptionMsg = fullExceptionMsg + 
             ". Also failed to rollback transaction because of: " + rollbackExc.getMessage();
         }
-
         if (cause != null) {
             throw new FailedToConnectException(failureMsg, cause);
         } else {

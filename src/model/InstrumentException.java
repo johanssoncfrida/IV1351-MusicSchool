@@ -1,17 +1,17 @@
 
-package integration;
+package model;
 
 /**
- * Thrown when a call to the bank database fails.
+ * Thrown when update, delete or read of an instrument fails.
+ * @author Frida Johansson
  */
-public class FailedToConnectException extends Exception {
-
+public class InstrumentException extends Exception{
     /**
      * Create a new instance thrown because of the specified reason.
      *
      * @param reason Why the exception was thrown.
      */
-    public FailedToConnectException(String reason) {
+    public InstrumentException(String reason) {
         super(reason);
     }
 
@@ -21,7 +21,7 @@ public class FailedToConnectException extends Exception {
      * @param reason    Why the exception was thrown.
      * @param rootCause The exception that caused this exception to be thrown.
      */
-    public FailedToConnectException(String reason, Throwable rootCause) {
+    public InstrumentException(String reason, Throwable rootCause) {
         super(reason, rootCause);
     }
 }
