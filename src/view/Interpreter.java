@@ -62,6 +62,7 @@ public class Interpreter {
         }
     }   
     private void handleStudents(){
+        keepReceivingStuCmds = true;
         String studentId;
         while(keepReceivingStuCmds){
             getMenu();
@@ -94,7 +95,7 @@ public class Interpreter {
                             break;
                         }
                     case 4:
-                        keepReceivingStuCmds = true;
+                        keepReceivingStuCmds = false;
                         break;
                     default:
                         System.out.println("illegal command");
@@ -107,6 +108,7 @@ public class Interpreter {
         }
     }
     private void handleRent(String id){
+        keepReceivingRentCmds = true;
         while(keepReceivingRentCmds){
             handleRentChoices();
             try{
@@ -143,9 +145,14 @@ public class Interpreter {
                         }
                         else
                             System.out.println("You can't rent more instruments, you need to return one first!");
-                            break;
+                            System.out.println("\nPress enter to go back");
+                            boolean command = waitForUserInput();
+                            if(command)
+                                break;
+                        break;
                     case 3:
                         ctrl.listStudentsInstrument(id);
+                        System.out.println("\nPress enter to go back");
                         boolean waitingForEnter = waitForUserInput();
                         if(waitingForEnter)
                             break;
@@ -158,7 +165,7 @@ public class Interpreter {
                         ctrl.terminateRental(selection, id);
                         break;
                     case 5:
-                        keepReceivingRentCmds = true;
+                        keepReceivingRentCmds = false;
                         break;
                     default:
                         System.out.println("illegal command");

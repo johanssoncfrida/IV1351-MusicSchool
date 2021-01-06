@@ -193,9 +193,11 @@ public class MusicSchoolDbHandler {
      * @throws SQLException if preparedStatement fails on the connection
      * @throws FailedToConnectException if connection fails 
      */
-    public void terminateRental(Student student,int instr, String studentID) throws SQLException, FailedToConnectException{
-        student.popInstrument(instr);
+    public Instrument terminateRental(Student student,int instr, String studentID) throws SQLException, FailedToConnectException{
+        Instrument instrument = student.getInstrument(instr);
+        
         try{
+            student.popInstrument(instr);
             createTerminateRentalStmt.setInt(1, instr);
             int updatedRows = createTerminateRentalStmt.executeUpdate();
             if (updatedRows != 1) {
@@ -206,6 +208,7 @@ public class MusicSchoolDbHandler {
          }catch(SQLException ex){
             handleException("Failed to connect with database",ex);  
         }
+        return instrument;
     }
     
     /**

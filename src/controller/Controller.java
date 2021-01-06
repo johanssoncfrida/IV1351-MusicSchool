@@ -107,7 +107,7 @@ public class Controller {
             if(stu.getStudentID().equals(stuID)){
                 MS.rentInstrument(instrID, stuID);
                 MS.storeInstrument(stu, instrID);
-                System.out.println(stu.getName() + "s" + " rented instruments: \n" + stu.getInstrumentsToString());
+                System.out.println(stu.getName() + " rented instrument: \n" + stu.getInstrument(instrID).toString());
             }
         }catch(Exception e){
             throw new InstrumentException("Could not rent the instrument", e);
@@ -124,8 +124,10 @@ public class Controller {
     public void terminateRental(int instrID, String studentID) throws InstrumentException{
         try{
         for(Student stu: students){
-            if(stu.getStudentID().equals(studentID))
-                MS.terminateRental(stu, instrID, studentID);
+            if(stu.getStudentID().equals(studentID)){
+                Instrument instrument = MS.terminateRental(stu, instrID, studentID);
+                System.out.println(stu.getName() + " returned instrument: \n" + instrument.toString());
+            }
         }
         }catch(Exception e){
             throw new InstrumentException("Could not terminate the rental", e);

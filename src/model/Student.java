@@ -10,13 +10,13 @@ package model;
 public class Student extends Person{
     String studentID;
     String level;
-    Instrument [] instrument;
+    Instrument [] instruments;
    
     public Student(String studentID,String level,String firstName, String lastName, String personalNumber, String phoneNo) {
         super(firstName, lastName, personalNumber, phoneNo);
         this.studentID = studentID;
         this.level = level;
-        instrument = new Instrument[2];
+        instruments = new Instrument[2];
     }
     public Student(){
         
@@ -41,6 +41,14 @@ public class Student extends Person{
      * @return the student's instrument.
      */
     public Instrument[] getInstruments(){
+        return instruments;
+    }
+    
+    public Instrument getInstrument(int id){
+        Instrument instrument = null;
+        for(Instrument instr : instruments)
+            if(id == instr.getID())
+                instrument = instr;
         return instrument;
     }
     
@@ -50,9 +58,9 @@ public class Student extends Person{
      * @param instr represents the instruments to be added to the student's pool
      */
     public void pushInstrument(Instrument instr){
-        for(int i = 0; i < instrument.length; i++){
-                if(instrument[i] == null){
-                    instrument[i] = instr;
+        for(int i = 0; i < instruments.length; i++){
+                if(instruments[i] == null){
+                    instruments[i] = instr;
                     break;
                 }          
         }
@@ -64,12 +72,12 @@ public class Student extends Person{
     public void popInstrument(int instrId){
         Instrument [] newInstru = new Instrument[2];
         int counter = 0;
-        for (Instrument instr : instrument){
-            if(instr.getID()!=instrId)
+        for (Instrument instr : instruments){
+            if(instr.getID()!= instrId)
                 newInstru[counter] = instr;
         counter ++;
         }
-        instrument = newInstru;
+        instruments = newInstru;
     }
     /**
      * Checks if the student already has the maximum rented quota of instrument
@@ -77,7 +85,7 @@ public class Student extends Person{
      * @return true if possible otherwise false
      */
     public boolean isRentPossible(){
-        for (Instrument instr : instrument) {
+        for (Instrument instr : instruments) {
             if (instr == null) 
                 return true;
         }
@@ -90,7 +98,7 @@ public class Student extends Person{
      */
     public String getInstrumentsToString(){
         StringBuilder sb = new StringBuilder();
-        for(Instrument inst: instrument)
+        for(Instrument inst: instruments)
             if(inst != null) 
                 sb.append(inst);
         return sb.toString();
@@ -103,7 +111,7 @@ public class Student extends Person{
                 .append("\nName: ").append(super.getFirstName()).append(" ").append(super.getLastName())
                 .append("\nIdentification: ").append(super.getPersNo()).append("\t")
                 .append("Phone no: ").append(super.getPhoneNo());
-        for(Instrument inst: instrument)
+        for(Instrument inst: instruments)
             if(inst != null) 
                 sb.append(inst);
         return sb.toString();
