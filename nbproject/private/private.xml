@@ -15,11 +15,13 @@
             <file>file:/C:/Users/Me/Documents/NetBeansProjects/MusicSchool/src/model/Instrument.java</file>
             <file>file:/C:/Users/Me/Documents/NetBeansProjects/MusicSchool/src/model/Person.java</file>
             <file>file:/C:/Users/Me/Documents/NetBeansProjects/MusicSchool/src/controller/Controller.java</file>
+            <file>file:/C:/Users/Me/Documents/NetBeansProjects/MusicSchool/src/model/InstrumentException.java</file>
             <file>file:/C:/Users/Me/Documents/NetBeansProjects/MusicSchool/src/integration/FailedToConnectException.java</file>
             <file>file:/C:/Users/Me/Documents/NetBeansProjects/MusicSchool/src/startup/Main.java</file>
             <file>file:/C:/Users/Me/Documents/NetBeansProjects/MusicSchool/src/model/Student.java</file>
+            <file>file:/C:/Users/Me/Documents/NetBeansProjects/MusicSchool/src/integration/MusicSchoolDbHandler.java</file>
+            <file>file:/C:/Users/Me/Documents/NetBeansProjects/MusicSchool/src/model/StudentException.java</file>
             <file>file:/C:/Users/Me/Documents/NetBeansProjects/MusicSchool/src/view/Interpreter.java</file>
-            <file>file:/C:/Users/Me/Documents/NetBeansProjects/MusicSchool/src/integration/MusicSchool.java</file>
         </group>
     </open-files>
 </project-private>
